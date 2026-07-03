@@ -1,3 +1,4 @@
+import { DocumentDto } from "@app/shared";
 import { API_URL } from "./env";
 
 async function request<T>(path: string, init?: RequestInit): Promise<T> {
@@ -63,8 +64,8 @@ export async function uploadDocument(file: File) {
     });
 }
 
-export async function getDocuments<T>() {
-    return request<T>("/documents", {
+export async function getDocuments(): Promise<DocumentDto[]> {
+    return request("/documents", {
         cache: "no-store",
     });
 }

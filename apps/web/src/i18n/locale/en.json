@@ -59,5 +59,13 @@
         "messages": {
             "verifyEmail": "Check your email to verify your account before signing in."
         }
+    },
+    "Document": {
+        "status": {
+            "UPLOADED": "Uploaded",
+            "PROCESSING": "Processing",
+            "COMPLETED": "Completed",
+            "FAILED": "Failed"
+        }
     }
 }
