@@ -21,6 +21,9 @@ export class DocumentEntity {
     @Column({ type: "varchar" })
     mimeType!: string;
 
+    @Column({ type: "integer" })
+    size!: number;
+
     @Column({ type: "varchar" })
     storagePath!: string;
 

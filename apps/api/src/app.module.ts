@@ -8,6 +8,7 @@ import { AppController } from "./app.controller";
 import { DocumentModule } from "./document/document.module";
 import { AuthModule } from "./auth/auth.module";
 import { HealthController } from "./health.controller";
+import { ormConfig } from "./database/orm.config";
 
 @Module({
     imports: [
@@ -21,15 +22,7 @@ import { HealthController } from "./health.controller";
             ),
         }),
 
-        TypeOrmModule.forRootAsync({
-            inject: [ConfigService],
-            useFactory: () => ({
-                type: "postgres",
-                url: process.env.DATABASE_URL,
-                autoLoadEntities: true,
-                synchronize: true,
-            }),
-        }),
+        TypeOrmModule.forRoot({ ...ormConfig, autoLoadEntities: true }),
 
         BullModule.forRootAsync({
             inject: [ConfigService],
