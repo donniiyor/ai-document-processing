@@ -8,13 +8,7 @@ export default function DashboardLayout({
     children,
 }: Readonly<PropsWithChildren>) {
     return (
-        <div
-            className="flex flex-col h-screen bg-white overflow-hidden"
-            style={{
-                fontFamily:
-                    "'Inter', -apple-system, BlinkMacSystemFont, sans-serif",
-            }}
-        >
+        <div className="flex flex-col h-screen bg-white overflow-hidden">
             <Header />
             {children}
         </div>
