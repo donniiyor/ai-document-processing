@@ -78,7 +78,6 @@ async function bootstrap() {
                     JSON.stringify({
                         id: document.id,
                         status: document.status,
-                        aiSummary: document.aiSummary,
                     }),
                 );
 
@@ -88,6 +87,15 @@ async function bootstrap() {
 
                 if (document) {
                     document.status = DocumentStatus.FAILED;
+
+                    await publisher.publish(
+                        "document-events",
+
+                        JSON.stringify({
+                            id: document.id,
+                            status: document.status,
+                        }),
+                    );
 
                     await AppDataSource.getRepository(DocumentEntity).save(
                         document,
@@ -110,6 +118,15 @@ async function bootstrap() {
     worker.on("failed", (job, error) => {
         console.error(`Job ${job?.id} failed`);
         console.error(error);
+    });
+
+    process.on("SIGTERM", async () => {
+        await worker.close();
+
+        await connection.quit();
+        await publisher.quit();
+
+        await AppDataSource.destroy();
     });
 }
 

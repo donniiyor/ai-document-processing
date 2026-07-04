@@ -2,9 +2,11 @@ import {
     Body,
     Controller,
     Get,
+    MessageEvent,
     Param,
     Post,
     Req,
+    Sse,
     UploadedFile,
     UseGuards,
     UseInterceptors,
@@ -12,18 +14,23 @@ import {
 import { FileInterceptor } from "@nestjs/platform-express";
 import { memoryStorage } from "multer";
 import { Request } from "express";
+import { Observable } from "rxjs";
 
 import { ChatDto, DocumentDto } from "@app/shared";
 
 import { DocumentService } from "./document.service";
 import { JwtAuthGuard } from "../auth/jwt-auth.guard";
+import { DocumentEventsService } from "./document-events.service";
 
 const MAX_UPLOAD_SIZE_BYTES = 50 * 1024 * 1024;
 
 @UseGuards(JwtAuthGuard)
 @Controller("documents")
 export class DocumentController {
-    constructor(private readonly documentService: DocumentService) {}
+    constructor(
+        private readonly documentService: DocumentService,
+        private readonly documentEventsService: DocumentEventsService,
+    ) {}
 
     @Get()
     async findAll(
@@ -34,6 +41,11 @@ export class DocumentController {
         );
 
         return documents.map((document) => new DocumentDto(document));
+    }
+
+    @Sse(":id/status")
+    status(@Param("id") id: string): Observable<MessageEvent> {
+        return this.documentEventsService.getStream(id).asObservable();
     }
 
     @Post("upload")
